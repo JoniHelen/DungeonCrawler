@@ -250,7 +250,7 @@ namespace DungeonCrawler
 
 		private void IfElse(string comparison, GameEventArgs.ResponseString responseString, GameEventArgs.ResponseAction responseAction, Action? executeOnVerify = null)
 		{
-			GameArgs.ComparisonStrings.Enqueue(comparison);
+			GameArgs.ComparisonStrings.Enqueue(comparison.ToUpper());
 			GameArgs.Responses.Enqueue(responseString);
 			GameArgs.ResponseCallbacks?.Enqueue(responseAction);
 			GameArgs.ExecuteOnVerify = executeOnVerify;
@@ -259,7 +259,7 @@ namespace DungeonCrawler
 
 		private void MainForm_IfElse(object? sender, GameEventArgs e)
 		{
-			if (e.ComparisonStrings.Dequeue() == e.InputString)
+			if (e.ComparisonStrings.Dequeue() == e.InputString.ToUpper())
 			{
 				e.ExecuteOnVerify?.Invoke();
 				GameOutputBox.Text = e.Responses.Dequeue().True;
