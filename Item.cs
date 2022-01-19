@@ -35,7 +35,7 @@ namespace DungeonCrawler
 			Rarity = rarity;
 		}
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj != null && obj is Item i)
             {
@@ -57,5 +57,10 @@ namespace DungeonCrawler
 			Legendary,
 			Mythical
         }
-	}
+
+        public override int GetHashCode()
+        {
+			return base.GetHashCode();
+        }
+    }
 }

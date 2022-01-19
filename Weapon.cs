@@ -31,6 +31,21 @@ namespace DungeonCrawler
 
 
 		// Constructor
+
+		/// <summary>
+		/// Creates a new weapon with the option of adding an enchantment.
+		/// </summary>
+		/// <param name="id">The item Id</param>
+		/// <param name="value">Value of the Item</param>
+		/// <param name="rarity">Rarity of the Item</param>
+		/// <param name="weaponDamage">Base Damage of the weapon</param>
+		/// <param name="strScaling">STR scaling of the weapon</param>
+		/// <param name="dexScaling">DEX scaling of the weapon</param>
+		/// <param name="intScaling">INT scaling of the weapon</param>
+		/// <param name="enchantability">The enchantability multiplier</param>
+		/// <param name="name">Name of the Item</param>
+		/// <param name="enchantment">The Enchantment applied to the weapon</param>
+		/// <param name="amount">Amount of items</param>
 		public Weapon(int id, float value, ItemRarity rarity, float weaponDamage, string strScaling, string dexScaling, string intScaling, float enchantability, string name = "", WeaponEnchantment enchantment = new(), int amount = 0) : base(id, value, rarity, name, amount)
 		{
 			Id = id;
@@ -46,11 +61,17 @@ namespace DungeonCrawler
 			Enchantability = enchantability;
 		}
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
 			if (obj != null && obj is Weapon w)
             {
-				return base.Equals(w) && w.WeaponDamage == WeaponDamage && w.STRScaling.Equals(STRScaling.Grade) && w.DEXScaling.Equals(DEXScaling.Grade) && w.INTScaling.Equals(INTScaling.Grade) && w.Enchantment.Equals(Enchantment) && w.Enchantability == Enchantability;
+				return base.Equals(w) 
+					&& w.WeaponDamage == WeaponDamage 
+					&& w.STRScaling.Equals(STRScaling.Grade) 
+					&& w.DEXScaling.Equals(DEXScaling.Grade) 
+					&& w.INTScaling.Equals(INTScaling.Grade) 
+					&& w.Enchantment.Equals(Enchantment) 
+					&& w.Enchantability == Enchantability;
             }
 			else
             {
@@ -73,7 +94,11 @@ namespace DungeonCrawler
 				Grade = grade;
             }
 
-            public float ToFloat()
+			/// <summary>
+			/// Converts the string grade to a float multiplier.
+			/// </summary>
+			/// <returns>Returns the grade multiplier as a float value.</returns>
+			public float ToFloat()
             {
                 return Grade switch
                 {
@@ -93,7 +118,7 @@ namespace DungeonCrawler
                 };
             }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
 				if(obj is string)
                 {
@@ -109,7 +134,12 @@ namespace DungeonCrawler
                 }
                 
             }
-        }
+
+			public override int GetHashCode()
+			{
+				return base.GetHashCode();
+			}
+		}
 
 		/// <summary>
 		/// Represents the Enchantment values of a Weapon.
@@ -131,11 +161,15 @@ namespace DungeonCrawler
 			/// <summary>The <c>INT</c> scaling boost of the Enchantment.</summary>
 			public float INTScalingUp { get; set; }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
 				if (obj != null && obj is WeaponEnchantment we)
                 {
-					return we.ATKUp == ATKUp && we.ATKUpFlat == ATKUpFlat && we.STRScalingUp == STRScalingUp && we.DEXScalingUp == DEXScalingUp && we.INTScalingUp == INTScalingUp;
+					return we.ATKUp == ATKUp 
+						&& we.ATKUpFlat == ATKUpFlat 
+						&& we.STRScalingUp == STRScalingUp 
+						&& we.DEXScalingUp == DEXScalingUp 
+						&& we.INTScalingUp == INTScalingUp;
 				}
 				else
                 {
@@ -143,6 +177,16 @@ namespace DungeonCrawler
                 }
                 
             }
+
+            public override int GetHashCode()
+            {
+				return base.GetHashCode();
+			}
         }
-	}
+
+        public override int GetHashCode()
+        {
+			return base.GetHashCode();
+        }
+    }
 }

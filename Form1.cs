@@ -134,8 +134,14 @@ namespace DungeonCrawler
 		/// <param name="player">Player Object.</param>
 		internal static void UpdateHealthBar(ProgressBar hpBar, GroupBox hpText, Player player)
 		{
+			double length = Math.Sqrt(Math.Pow(1 - player.Health / player.MaxHealth, 2) + Math.Pow(player.Health / player.MaxHealth, 2));
+
 			hpBar.Value = (int)(player.Health / player.MaxHealth * 100);
+			hpBar.ForeColor = Color.FromArgb((int)((1 - player.Health / player.MaxHealth) / length * 255f), (int)(player.Health / player.MaxHealth / length * 255f), 0);
+			hpBar.Invalidate();
 			hpText.Text = "HP: " + player.Health.ToString() + "/" + player.MaxHealth.ToString();
+			hpText.ForeColor = Color.FromArgb((int)((1 - player.Health / player.MaxHealth) / length * 255f), (int)(player.Health / player.MaxHealth / length * 255f), 0);
+			hpText.Invalidate();
 		}
 
 		/// <summary>
@@ -145,8 +151,14 @@ namespace DungeonCrawler
 		/// <param name="player">Player Object.</param>
 		internal static void UpdateManaBar(ProgressBar mpBar, GroupBox mpText, Player player)
 		{
+			double length = Math.Sqrt(Math.Pow((int)(1 - (player.Mana / player.MaxMana)), 2) + Math.Pow((int)(player.Mana / player.MaxMana), 2));
+
 			mpBar.Value = (int)(player.Mana / player.MaxMana * 100);
+			mpBar.ForeColor = Color.FromArgb((int)((1 - player.Mana / player.MaxMana) / length * 255f), 0, (int)(player.Mana / player.MaxMana / length * 255f));
+			mpBar.Invalidate();
 			mpText.Text = "MP: " + player.Mana.ToString() + "/" + player.MaxMana.ToString();
+			mpText.ForeColor = Color.FromArgb((int)((1 - player.Mana / player.MaxMana) / length * 255f), (int)(player.Mana / player.MaxMana / length * 255f), 0);
+			mpText.Invalidate();
 		}
 
 		/// <summary>
@@ -221,6 +233,11 @@ namespace DungeonCrawler
 		#endregion
 
 		#region EVENT_FRAMEWORK
+
+		/// <summary>
+		/// Clears the whole screen and writes the message.
+		/// </summary>
+		/// <param name="message"> The message to write. </param>
 		private void PrintScreen(string message)
 		{
 			GameArgs.Responses.Enqueue(new GameEventArgs.ResponseString { True = message });
@@ -230,11 +247,20 @@ namespace DungeonCrawler
 
 		}
 
+		/// <summary>
+		/// This is the event that writes the text to the screen from PrintScreen.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MainForm_PrintScreen(object? sender, GameEventArgs e)
 		{
 			GameOutputBox.Text = e.Responses.Dequeue().True;
 		}
 
+		/// <summary>
+		/// Writes the message to the end of the current text on the screen.
+		/// </summary>
+		/// <param name="message"> The text to write on the screen. </param>
 		private void PrintLine(string message)
 		{
 			GameArgs.Responses.Enqueue(new GameEventArgs.ResponseString { True = message });
@@ -243,11 +269,23 @@ namespace DungeonCrawler
 			GameEvent -= MainForm_PrintLine;
 		}
 
+		/// <summary>
+		/// This is the event that writes the text to the screen from PrintLine.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MainForm_PrintLine(object? sender, GameEventArgs e)
 		{
 			GameOutputBox.AppendText(e.Responses.Dequeue().True);
 		}
 
+		/// <summary>
+		/// This function serves as an If Else function that handles player input.
+		/// </summary>
+		/// <param name="comparison"> The string to compare against. </param>
+		/// <param name="responseString"> The messages to the player for True and False cases. </param>
+		/// <param name="responseAction"> Functions to execute on True and False. </param>
+		/// <param name="executeOnVerify"> Function to execute immediately after verification. </param>
 		private void IfElse(string comparison, GameEventArgs.ResponseString responseString, GameEventArgs.ResponseAction responseAction, Action? executeOnVerify = null)
 		{
 			GameArgs.ComparisonStrings.Enqueue(comparison.ToUpper());
@@ -257,6 +295,11 @@ namespace DungeonCrawler
 			GameEvent += MainForm_IfElse;
 		}
 
+		/// <summary>
+		/// This is the event that handles the If Else statement.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MainForm_IfElse(object? sender, GameEventArgs e)
 		{
 			if (e.ComparisonStrings.Dequeue() == e.InputString.ToUpper())
@@ -276,6 +319,13 @@ namespace DungeonCrawler
 			}
 		}
 
+		/// <summary>
+		/// This function serves as a Switch function that handles player input.
+		/// </summary>
+		/// <param name="comparisons"> The options of the Switch. </param>
+		/// <param name="responseStrings"> The responses to the different cases. </param>
+		/// <param name="responseActions"> Functions to execute on different cases. </param>
+		/// <param name="executeOnVerify"> Function to execute immediately after verification. </param>
 		private void Switch(string[] comparisons, GameEventArgs.ResponseString[] responseStrings, GameEventArgs.ResponseAction[] responseActions, Action? executeOnVerify = null)
         {
 			GameArgs.ComparisonStrings = new Queue<string>(comparisons);
@@ -285,6 +335,11 @@ namespace DungeonCrawler
             GameEvent += MainForm_Switch;
         }
 
+		/// <summary>
+		/// This is the event that handles the Switch statement.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
         private void MainForm_Switch(object? sender, GameEventArgs e)
         {
 			GameEvent -= MainForm_Switch;
@@ -327,16 +382,21 @@ namespace DungeonCrawler
 			def?.Invoke();
         }
 
+		/// <summary>
+		/// This is a small event to require the player to input nothing once.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
         private void MainForm_Await(object? sender, GameEventArgs e)
 		{
 			GameEvent -= MainForm_Await;
             e.NextFunc?.Invoke();
         }
 
-		#endregion
-	}
+        #endregion
+    }
 
-	internal class GameEventArgs : EventArgs
+    internal class GameEventArgs : EventArgs
 	{
 		/// <summary>The player data passed to this Event.</summary>
 		public Player Player { get; set; } = new();

@@ -54,6 +54,7 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.GameOutputBox);
+            this.groupBox1.ForeColor = System.Drawing.Color.Goldenrod;
             this.groupBox1.Location = new System.Drawing.Point(17, 308);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox1.Name = "groupBox1";
@@ -91,6 +92,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.GameInputBox);
+            this.groupBox2.ForeColor = System.Drawing.Color.Goldenrod;
             this.groupBox2.Location = new System.Drawing.Point(17, 566);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox2.Name = "groupBox2";
@@ -115,6 +117,7 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.Inventory);
+            this.groupBox3.ForeColor = System.Drawing.Color.Goldenrod;
             this.groupBox3.Location = new System.Drawing.Point(17, 17);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox3.Name = "groupBox3";
@@ -127,6 +130,7 @@
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.Equipment);
+            this.groupBox4.ForeColor = System.Drawing.Color.Goldenrod;
             this.groupBox4.Location = new System.Drawing.Point(446, 17);
             this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox4.Name = "groupBox4";
@@ -153,6 +157,7 @@
             this.groupBox5.Controls.Add(this.PlayerStats);
             this.groupBox5.Controls.Add(this.HPText);
             this.groupBox5.Controls.Add(this.MPText);
+            this.groupBox5.ForeColor = System.Drawing.Color.Goldenrod;
             this.groupBox5.Location = new System.Drawing.Point(866, 17);
             this.groupBox5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox5.Name = "groupBox5";
