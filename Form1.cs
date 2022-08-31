@@ -182,9 +182,9 @@ namespace DungeonCrawler
 		{
 			PrintScreen("Type 'Enter' to continue.");
 			IfElse("Enter",
-					new GameEventArgs.ResponseString { True = "Well done.", False = "Try again."},
+					new GameEventArgs.ResponseString { True = "Well done.", False = "Try again." },
 
-					new GameEventArgs.ResponseAction { True = HealPlayer, False = StartDialogue}
+					new GameEventArgs.ResponseAction { True = HealPlayer, False = StartDialogue }
 				);
 		}
 
@@ -192,9 +192,9 @@ namespace DungeonCrawler
         {
 			PrintScreen("Next, type 'Heal' to heal the player.");
 			IfElse("Heal",
-					new GameEventArgs.ResponseString { True = "Well done.", False = "Try again."},
+					new GameEventArgs.ResponseString { True = "Well done.", False = "Try again." },
 
-					new GameEventArgs.ResponseAction { True = SwitchTest, False = HealPlayer},
+					new GameEventArgs.ResponseAction { True = SwitchTest, False = HealPlayer },
 
 					() => { GameArgs.Player.Heal(100, HealthBar, HPText); }
 					);
