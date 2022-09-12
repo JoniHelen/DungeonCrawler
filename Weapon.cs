@@ -10,23 +10,11 @@ namespace DungeonCrawler
 	internal class Weapon : Item
 	{
 		// Properties
-
-		/// <summary>The base <c>Damage</c> stat of the Weapon.</summary>
 		public float WeaponDamage { get; set; }
-
-		/// <summary>The <c>STR</c> scaling of the Weapon.</summary>
 		public WeaponScaling STRScaling { get; set; }
-
-		/// <summary>The <c>DEX</c> scaling of the Weapon.</summary>
 		public WeaponScaling DEXScaling { get; set; }
-
-		/// <summary>The <c>INT</c> scaling of the Weapon.</summary>
 		public WeaponScaling INTScaling { get; set; }
-
-		/// <summary>The <c>Enchantment</c> of the Weapon.</summary>
 		public WeaponEnchantment Enchantment { get; set; }
-
-		/// <summary>The <c>Enchantability</c> factor of the Weapon.</summary>
 		public float Enchantability { get; set; }
 
 
@@ -98,27 +86,24 @@ namespace DungeonCrawler
 			/// Converts the string grade to a float multiplier.
 			/// </summary>
 			/// <returns>Returns the grade multiplier as a float value.</returns>
-			public float ToFloat()
-            {
-                return Grade switch
-                {
-                    "S+" => 1.50f,
-					"S" => 1.25f,
-                    "A+" => 1.10f,
-                    "A" => 1.00f,
-                    "B+" => 0.95f,
-                    "B" => 0.90f,
-                    "C+" => 0.85f,
-                    "C" => 0.80f,
-                    "D+" => 0.75f,
-                    "D" => 0.70f,
-                    "E+" => 0.65f,
-                    "E" => 0.60f,
-                    _ => 0f,
-                };
-            }
+			public float ToFloat() => Grade switch
+			{
+				"S+" => 1.50f,
+				"S" => 1.25f,
+				"A+" => 1.10f,
+				"A" => 1.00f,
+				"B+" => 0.95f,
+				"B" => 0.90f,
+				"C+" => 0.85f,
+				"C" => 0.80f,
+				"D+" => 0.75f,
+				"D" => 0.70f,
+				"E+" => 0.65f,
+				"E" => 0.60f,
+				_ => 0f,
+			};
 
-            public override bool Equals(object? obj)
+			public override bool Equals(object? obj)
             {
 				if(obj is string)
                 {
@@ -146,19 +131,10 @@ namespace DungeonCrawler
 		/// </summary>
 		public struct WeaponEnchantment
 		{
-			/// <summary>The <c>ATK</c> percentage boost of the Enchantment.</summary>
 			public float ATKUp { get; set; }
-
-			/// <summary>The flat <c>ATK</c> boost of the Enchantment.</summary>
 			public float ATKUpFlat { get; set; }
-
-			/// <summary>The <c>STR</c> scaling boost of the Enchantment.</summary>
 			public float STRScalingUp { get; set; }
-
-			/// <summary>The <c>DEX</c> scaling boost of the Enchantment.</summary>
 			public float DEXScalingUp { get; set; }
-
-			/// <summary>The <c>INT</c> scaling boost of the Enchantment.</summary>
 			public float INTScalingUp { get; set; }
 
             public override bool Equals(object? obj)

@@ -5,6 +5,8 @@ namespace DungeonCrawler
 		/// <summary>This is the main Event that handles all of the interaction with the game.</summary>
 		internal event EventHandler<GameEventArgs> GameEvent;
 
+		internal static event EventHandler<UIEventArgs> UIUpdateEvent = delegate { };
+
 		/// <summary>The data to be passed to all GameEvents.</summary>
 		internal GameEventArgs GameArgs = new();
 
@@ -19,19 +21,21 @@ namespace DungeonCrawler
 		/// <param name="e">The data to be passed to the Event.</param>
 		internal virtual void OnGameEvent(GameEventArgs e)
 		{
-			EventHandler<GameEventArgs> handler = GameEvent;
-			if (handler != null)
-			{
-				handler(this, e);
-			}
-		}
+            GameEvent?.Invoke(this, e);
+        }
+
+		internal static void OnUIUpdate(UIEventArgs e)
+        {
+			if ((e.Elements & UIEventArgs.UpdatedElements.HealthBar) != 0) UIUpdateEvent += MainForm_UpdateInventory;
+			UIUpdateEvent?.Invoke(null, e);
+        }
 
 		/// <summary>
 		/// This Event is called before the Form is shown.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void MainForm_Load(object sender, EventArgs e)
+		private void MainForm_Load(object? sender, EventArgs e)
 		{
 			GameInputBox.KeyDown += GameInputBox_KeyDown;
 		}
@@ -62,12 +66,12 @@ namespace DungeonCrawler
 			Refresh();
 			Player player = Player.LoadPlayerData();
 			GameArgs.Player = player;
-			player.AddToInventory(Inventory, new Item(0, 100, Item.ItemRarity.Common, "Stick"), 3);
-			player.AddToInventory(Inventory, new Item(0, 20, Item.ItemRarity.Common, "Bone"), 12);
-			player.AddToInventory(Inventory, new Item(0, 75, Item.ItemRarity.Common, "Grass"), 6);
-			player.AddToInventory(Inventory, new Weapon(0, 2200, Item.ItemRarity.Mythical, 44, "S+", "S+", "S+", 1, "Sword"));
-			player.AddToInventory(Inventory, new Item(0, 100, Item.ItemRarity.Common, "Stick"), 3);
-			player.AddToInventory(Inventory, new Weapon(0, 2200, Item.ItemRarity.Mythical, 44, "S+", "S+", "S+", 1, "Sword"));
+			player.AddToInventory(new Item(0, 100, Item.ItemRarity.Common, "Stick"), 3);
+			player.AddToInventory(new Item(0, 20, Item.ItemRarity.Common, "Bone"), 12);
+			player.AddToInventory(new Item(0, 75, Item.ItemRarity.Common, "Grass"), 6);
+			player.AddToInventory(new Weapon(0, 2200, Item.ItemRarity.Mythical, 44, "S+", "S+", "S+", 1, "Sword"));
+			player.AddToInventory(new Item(0, 100, Item.ItemRarity.Common, "Stick"), 3);
+			player.AddToInventory(new Weapon(0, 2200, Item.ItemRarity.Mythical, 44, "S+", "S+", "S+", 1, "Sword"));
 			player.TakeDamage(5, HealthBar, HPText);
 			UpdateManaBar(ManaBar, MPText, player);
 			UpdatePlayerStatBox(PlayerStats, player);
@@ -79,33 +83,31 @@ namespace DungeonCrawler
 		/// <summary>
 		/// Updates the Inventory TreeView component.
 		/// </summary>
-		/// <param name="itemDisplay">The TreeView Component.</param>
-		/// <param name="player">Player Object.</param>
-		internal static void UpdateInventory(TreeView itemDisplay, Player player)
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		internal void MainForm_UpdateInventory(object? sender, UIEventArgs e)
 		{
-			itemDisplay.BeginUpdate();
+			Inventory.BeginUpdate();
 
-			itemDisplay.Nodes.Clear();
+			Inventory.Nodes.Clear();
 
-			if (player.Inventory.Any(x => x.GetType() == typeof(Item)))
+			if (e.Player.Inventory.Any(x => x.GetType() == typeof(Item)))
 			{
-				itemDisplay.Nodes.Add("Items", "Items");
+				Inventory.Nodes.Add("Items", "Items");
 			}
 
-			if (player.Inventory.Any(x => x.GetType() == typeof(Weapon)))
+			if (e.Player.Inventory.Any(x => x.GetType() == typeof(Weapon)))
 			{
-				itemDisplay.Nodes.Add("Weapons", "Weapons");
+				Inventory.Nodes.Add("Weapons", "Weapons");
 			}
 
 			//if (Inventory.Any(x => x.GetType() == typeof(Equipment)))
 
-			foreach (Item i in player.Inventory)
+			foreach (Item i in e.Player.Inventory)
 			{
-				if (i is Weapon)
+				if (i is Weapon weapon)
 				{
-					Weapon weapon = (Weapon)i;
-
-					itemDisplay.Nodes[itemDisplay.Nodes.IndexOfKey("Weapons")].Nodes.Add(new TreeNode(weapon.Name, new TreeNode[] {
+					Inventory.Nodes[Inventory.Nodes.IndexOfKey("Weapons")].Nodes.Add(new TreeNode(weapon.Name, new TreeNode[] {
 						new TreeNode("Amount: " + weapon.Amount.ToString()),
 						new TreeNode("Value: " + weapon.Value.ToString()),
 						new TreeNode("Base damage: " + weapon.WeaponDamage.ToString()),
@@ -117,14 +119,14 @@ namespace DungeonCrawler
 				}
 				else
 				{
-					itemDisplay.Nodes[itemDisplay.Nodes.IndexOfKey("Items")].Nodes.Add(new TreeNode(i.Name, new TreeNode[] {
+					Inventory.Nodes[Inventory.Nodes.IndexOfKey("Items")].Nodes.Add(new TreeNode(i.Name, new TreeNode[] {
 						new TreeNode("Amount: " + i.Amount.ToString()),
 						new TreeNode("Value: " + i.Value.ToString())
 					}));
 				}
 			}
 
-			itemDisplay.EndUpdate();
+			Inventory.EndUpdate();
 		}
 
 		/// <summary>
@@ -395,6 +397,23 @@ namespace DungeonCrawler
 
         #endregion
     }
+
+	internal class UIEventArgs : EventArgs
+    {
+		/// <summary>The player data passed to this Event.</summary>
+		public Player Player { get; set; } = new();
+		public UpdatedElements Elements { get; set; }
+
+        [Flags]
+		public enum UpdatedElements
+        {
+			none = 0,
+			HealthBar = 1 << 0,
+			ManaBar = 1 << 1,
+			Inventory = 1 << 2,
+			StatBox = 1 << 3
+        }
+	}
 
     internal class GameEventArgs : EventArgs
 	{

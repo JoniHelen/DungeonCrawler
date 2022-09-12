@@ -10,41 +10,21 @@ namespace DungeonCrawler
 	{
         #region PROPERTIES
         // Properties
-
-        /// <summary>The <c>Health</c> value of the Player.</summary> 
-        public float Health { get; private set; }
-
-		/// <summary>The <c>MaxHealth</c> value of the Player.</summary> 
+        public float Health { get; private set; } 
 		public float MaxHealth { get; private set; }
-
-		/// <summary>The <c>Mana</c> value of the Player.</summary> 
-		public float Mana { get; private set; }
-
-		/// <summary>The <c>MaxMana</c> value of the Player.</summary> 
+		public float Mana { get; private set; } 
 		public float MaxMana { get; private set; }
-
-		/// <summary>The <c>Attack</c> value of the Player.</summary> 
 		public float ATK { get; private set; }
-
-		/// <summary>The <c>Strength</c> stat value of the Player.</summary> 
 		public int STR { get; private set; }
-
-		/// <summary>The <c>Dexterity</c> stat value of the Player.</summary> 
 		public int DEX { get; private set; }
-
-		/// <summary>The <c>Intelligence</c> stat value of the Player.</summary> 
 		public int INT { get; private set; }
 
-		/// <summary>The Inventory list of the Player.</summary> 
 		public List<Item> Inventory { get; set; } = new List<Item>();
-
-		/// <summary>The Equipment list of the Player.</summary>
 		public List<Item> Equipment { get; set; } = new List<Item>();
+		private UIEventArgs eventArgs = new UIEventArgs();
         #endregion
 
         // Constructor
-
-        /// <summary>Create a new Player with default stats.</summary>
         public Player()
 		{
 			Health = 10;
@@ -55,6 +35,7 @@ namespace DungeonCrawler
 			STR = 1;
 			DEX = 1;
 			INT = 1;
+			eventArgs.Player = this;
 		}
 
 		/// <summary>
@@ -82,7 +63,7 @@ namespace DungeonCrawler
 		/// </summary>
 		/// <param name="itemToAdd">The Item object to be added.</param>
 		/// <param name="TV">The TreeView displaying the items.</param>
-		public void AddToInventory(TreeView TV, Item itemToAdd)
+		public void AddToInventory(Item itemToAdd)
 		{
 			// TODO: BETTER EQUALITY COMPARER FOR ITEMS
 			Item? added = Inventory.Find(x => itemToAdd.Equals(x));
@@ -98,7 +79,7 @@ namespace DungeonCrawler
 				Inventory.Add(itemToAdd);
 			}
 
-			MainForm.UpdateInventory(TV, this);
+			MainForm.OnUIUpdate(eventArgs);
 		}
 
 		/// <summary>
@@ -107,7 +88,7 @@ namespace DungeonCrawler
 		/// <param name="itemToAdd">The Item object to be added.</param>
 		/// <param name="amount">The amount of Items to add.</param>
 		/// <param name="TV">The TreeView displaying the items.</param>
-		public void AddToInventory(TreeView TV, Item itemToAdd, int amount)
+		public void AddToInventory(Item itemToAdd, int amount)
 		{
 			Item? added = Inventory.Find(x => itemToAdd.Equals(x));
 			if (added != null)
@@ -120,7 +101,7 @@ namespace DungeonCrawler
 				Inventory.Add(itemToAdd);
 			}
 
-			MainForm.UpdateInventory(TV, this);
+			MainForm.OnUIUpdate(eventArgs);
 		}
 
 		/// <summary>

@@ -9,20 +9,10 @@ namespace DungeonCrawler
 	internal class Item
 	{
 		// Properties
-
-		/// <summary>The Name value of the Item.</summary>
 		public string Name { get; set; }
-
-		/// <summary>The Id value of the Item.</summary>
 		public int Id { get; set; }
-
-		/// <summary>The Id value of the Item.</summary>
 		public int Amount { get; set; }
-
-		/// <summary>The "Value" value of the Item.</summary>
 		public float Value { get; set; }
-
-		/// <summary>The Rarity value of the Item.</summary>
 		public ItemRarity Rarity { get; set; }
 
 		// Constructor
